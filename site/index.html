@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#142f3b">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="referrer" content="no-referrer">
+  <meta name="description" content="View your MA2014 quiz results and detailed question marks.">
+  <title>MA2014 · Student results</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a href="./" class="brand" aria-label="MA2014 CA Marks Student results home"><span class="brand-icon" aria-hidden="true">∂</span><span>MA2014 <span class="brand-ca">CA Marks</span><span class="brand-subtitle">STUDENT RESULTS</span></span></a>
+    <span class="header-context">Semester 3 <span aria-hidden="true">/</span> Intake 2024</span>
+    <button id="switch-student" class="button button-quiet" hidden>Change student <span aria-hidden="true">↗</span></button>
+  </header>
+
+  <main id="main">
+    <section id="lookup-view" class="lookup-view" aria-labelledby="lookup-heading">
+      <div class="lookup-panel">
+        <div class="lookup-card">
+          <span class="section-number">01 / YOUR RESULTS</span>
+          <h1 id="lookup-heading">Let’s find your marks.</h1>
+          <p class="muted">Enter your full index number to view your individual grading breakdown.</p>
+          <form id="lookup-form" novalidate>
+            <label for="index-number">Student index number</label>
+            <input id="index-number" name="index" type="text" placeholder="e.g. 240015P" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="16" aria-describedby="index-help lookup-error" required>
+            <p id="index-help" class="field-help">Six digits followed by a letter. Uppercase or lowercase is fine.</p>
+            <p id="lookup-error" class="error-message" role="alert" hidden></p>
+            <button id="lookup-submit" type="submit" class="button button-primary"><span>View my results</span><span aria-hidden="true">→</span></button>
+          </form>
+          <div class="lookup-note"><span class="small-symbol" aria-hidden="true">i</span><p>Your results open on this page. No account or password is needed.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="results-view" class="results-view" aria-labelledby="results-heading" hidden>
+      <div class="results-intro"><div><span class="eyebrow">MA2014 · DIFFERENTIAL EQUATIONS</span><h1 id="results-heading" tabindex="-1">Your grading overview.</h1><p class="muted">Your marks, from the overall result to every assessed part.</p></div><button class="button button-outline" id="print-results"><span aria-hidden="true">⎙</span> Print results</button></div>
+      <div class="student-card"><div class="student-identity"><span class="avatar" id="student-avatar" aria-hidden="true"></span><div><span class="eyebrow">STUDENT</span><h2 id="student-name"></h2><div class="student-contact"><span id="student-index" class="index-badge"></span><span id="student-email"></span></div></div></div><div class="overall"><span class="eyebrow">CA TOTAL · THIS MODULE</span><div id="overall-score" class="overall-score"></div><span id="recorded-count" class="muted"></span></div></div>
+      <nav id="quiz-overview" class="quiz-overview" aria-label="Jump to a quiz"></nav>
+      <div class="section-heading"><div><span class="eyebrow">THE BREAKDOWN</span><h2>Every question. Every mark.</h2></div><span class="muted">All marks shown against their maximum.</span></div>
+      <div id="quiz-details" class="quiz-details"></div>
+      <aside class="results-help"><span class="small-symbol" aria-hidden="true">i</span><div><strong>Need to discuss your result?</strong><p>Contact your lecturer with your index number and quiz number. Quizzes with no recorded mark are shown as “Absent.” The CA total is the sum of all five quiz marks, out of 100.</p></div></aside>
+    </section>
+  </main>
+  <footer class="site-footer"><span>MA2014 <span aria-hidden="true">/</span> Differential Equations</span><span id="last-updated">Student grading portal</span></footer>
+  <div id="live-status" class="visually-hidden" role="status" aria-live="polite"></div>
+</body>
+</html>

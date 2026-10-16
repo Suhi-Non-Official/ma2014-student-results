@@ -1,0 +1,9 @@
+# Local source workbooks and marking schemes must never be published.
+/Grades/
+/Marking Schemes/
+/.local/
+/node_modules/
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
