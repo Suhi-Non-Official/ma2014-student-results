@@ -41,3 +41,4 @@
 .button-primary .arrow-icon{width:26px;height:26px;flex-basis:26px}
 .tile-top{align-items:center}.tile-arrow{width:20px;height:20px;flex-basis:20px;color:var(--teal)}
 @media(max-width:700px){.arrow-icon{width:26px;height:26px;flex-basis:26px}.button-primary .arrow-icon{width:28px;height:28px;flex-basis:28px}.tile-arrow{width:22px;height:22px;flex-basis:22px}}
+.report-problem p.upload-instruction{color:#b42318;font-weight:700}
