@@ -1,6 +1,6 @@
 # MA2014 student results
 
-A mobile-friendly student grading portal for Semester 3, Intake 2024. Students enter an index number to see their name, email, quiz totals and question totals. Quizzes 2–5 show the actual questions and complete worked marking schemes, split into 32 assessed sections, with the student's mark out of the allocated total beside each section. Select a scheme image to enlarge it. Quiz 1 directs students to their marked answer script. Deduction reasons and submission filenames are excluded.
+A mobile-friendly student grading portal for Semester 3, Intake 2024. Students enter an index number to see their name, email, quiz totals and question totals. Quizzes 2–5 show the actual questions and complete worked marking schemes, split into 32 assessed sections, with the student's mark out of the allocated total beside each section. Select a scheme image to enlarge it. Quiz 1 includes both questions and the worked marking scheme beneath the answer-script note; its individual question marks remain on the script. All five quiz sections start collapsed and can be opened using their Expand control or quiz shortcut. The lookup page identifies the BM, ENTC and ME cohort of Lecturer Aruna Bandara. Deduction reasons and submission filenames are excluded.
 
 ## Preview
 

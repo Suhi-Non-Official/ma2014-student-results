@@ -76,18 +76,37 @@ function renderStudent(student) {
     if(data.total === null) tileScore.classList.add('missing');
     anchor.append(top,tileScore,bar);overview.append(anchor);
 
-    const card = el('details','quiz-card'); card.id = `quiz-${i+1}`;card.open = true;
+    const card = el('details','quiz-card'); card.id = `quiz-${i+1}`;card.open = false;
     const summary = el('summary');
     const title = el('div','quiz-title');
-    title.append(el('h3','',quiz.title),el('span','quiz-subtitle',quiz.topic));
-    const chevron = el('span','chevron','⌄');chevron.setAttribute('aria-hidden','true');
-    summary.append(el('span','quiz-number',String(i+1).padStart(2,'0')),title,score(data.total,20,'quiz-total'),chevron);
+    title.append(el('h3','',quiz.title),el('span','quiz-subtitle',quiz.topic),el('span','quiz-open-hint','Select to view questions & marking scheme'));
+    const toggle=el('span','quiz-toggle');toggle.setAttribute('aria-hidden','true');
+    const toggleLabel=el('span','quiz-toggle-label','Expand');
+    const toggleSymbol=el('span','quiz-toggle-symbol','+');
+    toggle.append(toggleLabel,toggleSymbol);
+    card.addEventListener('toggle',()=>{
+      toggleLabel.textContent=card.open?'Collapse':'Expand';
+      toggleSymbol.textContent=card.open?'−':'+';
+      title.querySelector('.quiz-open-hint').textContent=card.open?'Select to close marking scheme':'Select to view questions & marking scheme';
+    });
+    anchor.addEventListener('click',()=>{card.open=true;});
+    summary.append(el('span','quiz-number',String(i+1).padStart(2,'0')),title,score(data.total,20,'quiz-total'),toggle);
     const body = el('div','quiz-body');
     if(i === 0) {
       body.append(note('All marking has been made on your answer script. Please refer to your marked answer script for question-level marks and feedback.','script-note'));
+      const topics=['Inverse Laplace transform','Initial value problem using Laplace transforms'];
+      (window.markingSchemeSections?.[1] || []).forEach((scheme,q)=>{
+        const section=el('section','question quiz-one-question');
+        const header=el('div','question-heading');const heading=el('h4','',`Question ${q+1}`);
+        heading.append(el('span','question-topic',topics[q]));
+        header.append(heading,el('span','question-score','Maximum: 10 marks'));
+        const prompt=el('div','scheme-prompt');prompt.append(el('span','scheme-label','QUESTION'),schemeImages(scheme.prompt,`Quiz 1, Question ${q+1}, question`));
+        const working=el('div','quiz-one-working');working.append(el('span','scheme-label','MARKING SCHEME'),schemeImages(scheme.parts[0],`Quiz 1, Question ${q+1}, worked solution`));
+        section.append(header,prompt,working);body.append(section);
+      });
       if(data.total === null) body.append(note('Absent — no mark is recorded for this quiz.','unavailable-note'));
     } else if(data.parts === null) {
-      body.append(note(data.total === null ? 'Absent — no mark is recorded for this quiz. Please contact your lecturer if you submitted an answer.' : 'Your total mark is recorded. A detailed question breakdown is not yet available in the supplied register.','unavailable-note'));
+      body.append(note(data.total === null ? 'Absent — no mark is recorded for this quiz. Please contact your instructor if you submitted an answer.' : 'Your total mark is recorded. A detailed question breakdown is not yet available in the supplied register.','unavailable-note'));
     } else {
       let offset = 0;
       quiz.questions.forEach((question,questionIndex) => {
@@ -169,11 +188,11 @@ form.addEventListener('submit', async event => {
     const hash = await sha256('ma2014:lookup:v1:'+index);
     const filename = Array.from(new Uint8Array(hash),b=>b.toString(16).padStart(2,'0')).join('');
     const response = await fetch(`records/${filename[0]}.json`,{cache:'no-store',signal:AbortSignal.timeout(15000)});
-    if(response.status === 404) { showError('No student record was found for that index. Please check the number and final letter, or contact your lecturer.');return; }
+    if(response.status === 404) { showError('No student record was found for that index. Please check the number and final letter, or contact your instructor.');return; }
     if(!response.ok) throw new Error('network');
     const bucket = await response.json();
     const encrypted = bucket[filename];
-    if(!encrypted) { showError('No student record was found for that index. Please check the number and final letter, or contact your lecturer.');return; }
+    if(!encrypted) { showError('No student record was found for that index. Please check the number and final letter, or contact your instructor.');return; }
     const key = await crypto.subtle.importKey('raw',await sha256('ma2014:record:v1:'+index),'AES-GCM',false,['decrypt']);
     const plain = await crypto.subtle.decrypt({name:'AES-GCM',iv:fromBase64(encrypted.iv)},key,fromBase64(encrypted.data));
     const student = JSON.parse(new TextDecoder().decode(plain));
@@ -181,7 +200,7 @@ form.addEventListener('submit', async event => {
     renderStudent(student);
   } catch(error) {
     if(error.name === 'TimeoutError' || error instanceof TypeError || error.message === 'network') showError('Your results could not be loaded. Please check your internet connection and try again.');
-    else showError('This result could not be read. Please try again or contact your lecturer.');
+    else showError('This result could not be read. Please try again or contact your instructor.');
   } finally {
     busy = false;$('lookup-submit').disabled = false;
     $('lookup-submit').firstElementChild.textContent = 'View my results';

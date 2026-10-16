@@ -14,6 +14,8 @@ POPPLER = Path('C:/Users/User/.cache/codex-runtimes/codex-primary-runtime/depend
 
 # Each question has its full prompt, followed by one crop group per graded part.
 LAYOUT = {
+ 1: [{'prompt':[(1,232,298)], 'parts':[[(2,70,727)]]},
+     {'prompt':[(1,302,394)], 'parts':[[(3,70,715)]]}],
  2: [{'prompt':[(1,232,372)], 'parts':[
       [(2,70,383)], [(2,384,709),(3,70,154)], [(3,154,244)], [(3,246,717)]]}],
  3: [{'prompt':[(1,232,357)], 'parts':[
@@ -60,6 +62,6 @@ def build():
                 manifest[quiz]=results
                 for image in pages.values():image.close()
     (ROOT/'site'/'scheme-sections.js').write_text('window.markingSchemeSections = '+json.dumps(manifest,separators=(',',':'))+';\n',encoding='utf8')
-    print(f'Rendered {sum(len(q["parts"]) for qs in manifest.values() for q in qs)} assessed sections across Quizzes 2–5.')
+    print('Rendered Quiz 1 questions and solutions, plus 32 assessed sections across Quizzes 2–5.')
 
 if __name__=='__main__':build()
