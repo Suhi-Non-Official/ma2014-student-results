@@ -8,6 +8,18 @@ const quizzes = [
   {title:'Quiz 5', topic:'Fourier transforms', questions:[{title:'Question 1', topic:'Transform of the triangular function', max:10, parts:[['Transform definition and limits',2],['Symmetry or equivalent splitting',2],['Integration and simplification',4],['Final transform and value at zero',2]]},{title:'Question 2', topic:'Inverse transform using correlation', max:10, parts:[['Factorization',2],['Fourier transform pairs',4],['Correlation or equivalent method',2],['Required function or integral',2]]}]},
 ];
 
+const makeupQuizzes = {
+  1: {title:'Quiz 1',topic:'Makeup · Laplace transforms',questions:[
+    {title:'Question 1',topic:'Inverse Laplace transform with a delay',max:10,parts:[['Combine the exponential factors',2],['Base inverse Laplace transform',3],['Second shifting theorem',3],['Final delayed function',2]]},
+    {title:'Question 2',topic:'Initial value problem',max:10,parts:[['Laplace transform and initial conditions',3],['Simplification of Y(s)',2],['Partial fractions',3],['Inverse Laplace transform',2]]}]},
+  2: {title:'Quiz 2',topic:'Makeup · Fourier sine series',questions:[
+    {title:'Question 1',topic:'Sine expansion and alternating odd-cubic identity',max:20,parts:[['Sine-series setup',3],['Calculation of the sine coefficients',8],['Fourier sine series',3],['Deduction of the identity',6]]}]},
+  3: {...quizzes[2],topic:'Makeup · Separation of variables'},
+  5: {title:'Quiz 5',topic:'Makeup · Fourier transforms',questions:[
+    {title:'Question 1',topic:'Transform of shifted exponentials',max:10,parts:[['Transform of the first exponential',3],['Transform of the shifted exponential',4],['Final transform',3]]},
+    {title:'Question 2',topic:'Inverse transform using partial fractions',max:10,parts:[['Factorization and simplification',3],['Partial fractions',3],['Inverse transform and sidedness',4]]}]},
+};
+
 const $ = id => document.getElementById(id);
 const form = $('lookup-form');
 const input = $('index-number');
@@ -63,9 +75,12 @@ function renderStudent(student) {
   const overview = $('quiz-overview');
   const details = $('quiz-details');
   overview.replaceChildren(); details.replaceChildren();
-  quizzes.forEach((quiz, i) => {
+  quizzes.forEach((originalQuiz, i) => {
     const data = student.quizzes[i];
+    const isMakeup = data.type === 'makeup';
+    const quiz = isMakeup ? makeupQuizzes[i+1] : originalQuiz;
     const anchor = el('a','quiz-tile');
+    if(isMakeup) anchor.classList.add('makeup-tile');
     anchor.href = `#quiz-${i+1}`;
     const top = el('span','tile-top');
     const arrow = el('span','','↗'); arrow.setAttribute('aria-hidden','true');
@@ -75,11 +90,14 @@ function renderStudent(student) {
     const tileScore = score(data.total,20,'tile-score');
     if(data.total === null) tileScore.classList.add('missing');
     anchor.append(top,tileScore,bar);overview.append(anchor);
+    if(isMakeup) anchor.append(el('span','makeup-badge','Makeup quiz'));
 
     const card = el('details','quiz-card'); card.id = `quiz-${i+1}`;card.open = false;
+    if(isMakeup) card.classList.add('makeup-card');
     const summary = el('summary');
     const title = el('div','quiz-title');
     title.append(el('h3','',quiz.title),el('span','quiz-subtitle',quiz.topic),el('span','quiz-open-hint','Select to view questions & marking scheme'));
+    if(isMakeup) title.append(el('span','makeup-badge','Makeup quiz'));
     const toggle=el('span','quiz-toggle');toggle.setAttribute('aria-hidden','true');
     const toggleLabel=el('span','quiz-toggle-label','Expand');
     const toggleSymbol=el('span','quiz-toggle-symbol','+');
@@ -92,7 +110,8 @@ function renderStudent(student) {
     anchor.addEventListener('click',()=>{card.open=true;});
     summary.append(el('span','quiz-number',String(i+1).padStart(2,'0')),title,score(data.total,20,'quiz-total'),toggle);
     const body = el('div','quiz-body');
-    if(i === 0) {
+    if(isMakeup) body.append(note('This result is from the makeup quiz. Your marks and the matching makeup marking scheme are shown below. It counts toward the same quiz in your CA total.','makeup-note'));
+    if(i === 0 && !isMakeup) {
       body.append(note('All marking has been made on your answer script. Please refer to your marked answer script for question-level marks and feedback.','script-note'));
       const topics=['Inverse Laplace transform','Initial value problem using Laplace transforms'];
       (window.markingSchemeSections?.[1] || []).forEach((scheme,q)=>{
@@ -118,7 +137,7 @@ function renderStudent(student) {
         const qTotal = values.reduce((a,b)=>a+b,0);
         header.append(heading,el('span','question-score',`${format(qTotal)} / ${question.max}`));
         section.append(header);
-        const scheme=window.markingSchemeSections?.[i+1]?.[questionIndex];
+        const scheme=(isMakeup ? window.makeupSchemeSections : window.markingSchemeSections)?.[i+1]?.[questionIndex];
         if(scheme){
           const prompt=el('div','scheme-prompt');
           prompt.append(el('span','scheme-label','QUESTION'),schemeImages(scheme.prompt,`${quiz.title}, ${question.title}, question`));
@@ -160,9 +179,11 @@ function fromBase64(text) { return Uint8Array.from(atob(text),c=>c.charCodeAt(0)
 function validateRecord(student, index) {
   if (student.index !== index || !Array.isArray(student.quizzes) || student.quizzes.length !== 5) throw new Error('record');
   student.quizzes.forEach((quiz,i) => {
+    if(quiz.type !== undefined && quiz.type !== 'makeup') throw new Error('record');
+    if(quiz.type === 'makeup' && !makeupQuizzes[i+1]) throw new Error('record');
     if(quiz.total !== null && (typeof quiz.total !== 'number' || !Number.isFinite(quiz.total) || quiz.total<0 || quiz.total>20)) throw new Error('record');
     if(quiz.parts !== null) {
-      const caps = quizzes[i].questions.flatMap(q=>q.parts.map(p=>p[1]));
+      const caps = (quiz.type === 'makeup' ? makeupQuizzes[i+1] : quizzes[i]).questions.flatMap(q=>q.parts.map(p=>p[1]));
       if(quiz.parts.length !== caps.length || quiz.parts.some((v,j)=>typeof v !== 'number' || !Number.isFinite(v) || v<0 || v>caps[j]) || Math.abs(quiz.parts.reduce((a,b)=>a+b,0)-quiz.total)>0.001) throw new Error('record');
     }
   });

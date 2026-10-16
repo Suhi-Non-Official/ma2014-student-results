@@ -33,15 +33,30 @@ LAYOUT = {
       [(3,70,188)], [(3,188,346)], [(3,346,419)], [(3,419,547)]]}],
 }
 
-def build():
+MAKEUP_LAYOUT = {
+ 1: [{'prompt':[(1,232,298)], 'parts':[
+      [(2,144,278)],[(2,279,376)],[(2,377,501)],[(2,502,563)]]},
+     {'prompt':[(1,303,395)], 'parts':[
+      [(2,663,715),(3,70,282)],[(3,283,442)],[(3,443,523)],[(3,524,612)]]}],
+ 2: [{'prompt':[(1,232,344)], 'parts':[
+      [(2,70,202)],[(2,203,730)],[(3,70,164)],[(3,168,437)]]}],
+ 3: LAYOUT[3],
+ 5: [{'prompt':[(1,232,283)], 'parts':[
+      [(2,70,193)],[(2,194,392)],[(2,393,465)]]},
+     {'prompt':[(1,290,357)], 'parts':[
+      [(2,466,624)],[(2,625,731),(3,70,90)],[(3,91,273)]]}],
+}
+
+def build(makeup=False):
     OUT.mkdir(parents=True, exist_ok=True)
     manifest = {}
     working = ROOT / '.local' / 'scheme-pages'
     working.mkdir(parents=True, exist_ok=True)
     with nullcontext(str(working)) as temporary:
-        for quiz, questions in LAYOUT.items():
-            source = ROOT / 'Marking Schemes' / f'quiz {quiz} marking scheme.pdf'
-            prefix = Path(temporary) / f'quiz-{quiz}'
+        for quiz, questions in (MAKEUP_LAYOUT if makeup else LAYOUT).items():
+            source = ROOT / 'Marking Schemes' / (f'Makeup Quiz {quiz}.pdf' if makeup else f'quiz {quiz} marking scheme.pdf')
+            label = f'makeup-quiz-{quiz}' if makeup else f'quiz-{quiz}'
+            prefix = Path(temporary) / label
             subprocess.run([str(POPPLER) if POPPLER.exists() else 'pdftoppm', '-scale-to','2200','-png',str(source),str(prefix)],check=True,capture_output=True)
             with pdfplumber.open(source) as pdf:
                 pages = {i+1:Image.open(Path(str(prefix)+f'-{i+1}.png')) for i in range(len(pdf.pages))}
@@ -56,12 +71,16 @@ def build():
                     return assets
                 results=[]
                 for q,question in enumerate(questions,1):
-                    name=f'quiz-{quiz}-question-{q}'
+                    name=f'{label}-question-{q}'
                     results.append({'prompt':crop_regions(question['prompt'],name+'-prompt'),
                         'parts':[crop_regions(regions,name+f'-part-{p}') for p,regions in enumerate(question['parts'],1)]})
                 manifest[quiz]=results
                 for image in pages.values():image.close()
-    (ROOT/'site'/'scheme-sections.js').write_text('window.markingSchemeSections = '+json.dumps(manifest,separators=(',',':'))+';\n',encoding='utf8')
-    print('Rendered Quiz 1 questions and solutions, plus 32 assessed sections across Quizzes 2–5.')
+    filename = 'makeup-scheme-sections.js' if makeup else 'scheme-sections.js'
+    variable = 'makeupSchemeSections' if makeup else 'markingSchemeSections'
+    (ROOT/'site'/filename).write_text('window.'+variable+' = '+json.dumps(manifest,separators=(',',':'))+';\n',encoding='utf8')
+    print('Rendered '+('makeup' if makeup else 'original')+' marking-scheme sections.')
 
-if __name__=='__main__':build()
+if __name__=='__main__':
+    import sys
+    build(makeup='--makeup' in sys.argv)

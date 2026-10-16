@@ -24,3 +24,14 @@
 
 .report-problem h2{font-family:Arial,Helvetica,sans-serif;font-size:14px;font-weight:700;letter-spacing:0;line-height:1.5;margin:0 0 7px}.report-problem p{font-size:12px;color:var(--muted);line-height:1.7;margin:0 0 15px}.report-problem-login{margin-top:25px;padding-top:23px;border-top:1px solid var(--line)}.report-problem .report-button{min-height:46px;font-size:12px;color:var(--teal);border-color:#a9c4ba;padding:0 17px;gap:16px}.report-problem .report-button:hover{background:#edf4ee}.results-help.report-problem{padding:24px;border:1px solid var(--line);border-radius:13px;background:#fff}.results-help.report-problem .report-button{margin-top:3px}.results-help.report-problem p{margin-bottom:12px;max-width:730px}
 @media(max-width:700px){.report-problem-login{margin-top:21px;padding-top:20px}.report-problem h2{font-size:13px}.report-problem p{font-size:11px}.report-problem-login .report-button{width:100%;justify-content:space-between}.results-help.report-problem{padding:19px 15px;gap:10px}}
+/* Makeup results retain the same quiz position with a distinct amber treatment. */
+.quiz-tile.makeup-tile {background:#fff9e5;border-color:#e4bd57;position:relative}
+.makeup-tile .mini-bar>span {background:#a97112}
+.makeup-badge {display:inline-flex;align-items:center;width:fit-content;background:#fff0b3;color:#775012;border:1px solid #e1bc58;border-radius:999px;padding:4px 9px;font-size:.7rem;font-weight:700;letter-spacing:.03em;line-height:1.3}
+.makeup-tile>.makeup-badge {margin-top:10px}
+.quiz-card.makeup-card {border-color:#dfbd65;border-left:4px solid #d5a32f}
+.makeup-card>summary {background:#fffbec}
+.makeup-card .quiz-title>.makeup-badge {margin-top:7px}
+.makeup-note {display:flex;gap:12px;align-items:flex-start;background:#fff7d6;border:1px solid #ecd594;color:#735222;border-radius:10px;padding:16px 18px;margin-bottom:24px}
+.makeup-note p {margin:0;line-height:1.6}
+@media print {.makeup-card>summary,.makeup-note,.makeup-tile {background:#fff7d6!important;print-color-adjust:exact}}

@@ -20,6 +20,10 @@ Official guidance: https://docs.github.com/en/pages/getting-started-with-github-
 
 ## Update marks later
 
+Makeup results use a separate `Makeup Quiz n` worksheet in the relevant local quiz workbook, with yellow highlighting. These tabs keep the makeup scheme's own component allocations. The importer selects the matching makeup questions and worked solutions, and the site labels these results in amber. A makeup mark occupies the corresponding quiz slot and contributes once to the CA total. Original records remain on their original worksheets.
+
+The current makeup batch contains 8 Quiz 1, 3 Quiz 2, 1 Quiz 3 and 6 Quiz 5 scripts; no Quiz 4 makeup script was supplied. At the user's instruction, Fernando A.D.D.R.H.'s script entered as 240157L is kept separately from roster index 240157C; its email is unavailable, and 240157C's original Quiz 2 mark remains unchanged.
+
 1. Replace the relevant workbooks in the local `Grades/` folder, retaining their current names and column layouts.
 2. Install Python dependencies with `python -m pip install -r requirements.txt` if needed.
 3. Run `python tools/build_data.py` from this folder. Review `.local/data-report.json` for unmatched indices and unidentified submissions. Total conflicts stop the build.
@@ -30,6 +34,8 @@ Workbook formulas are not evaluated by the import script. Detailed totals are ca
 ## Update the marking-scheme images
 
 The current images are built from the PDFs in the local `Marking Schemes/` folder. To regenerate them, install the Python requirements and Poppler (`pdftoppm`), then run `python tools/build_scheme_assets.py`. The script uses the bundled Poppler path when available, otherwise `pdftoppm` on PATH. Crop boundaries are recorded in PDF points in the script and must be reviewed if the source PDF layout changes. Check the result before publishing `site/schemes/` and `site/scheme-sections.js`.
+
+For makeup papers, retain `Makeup Quiz 1.pdf`, `Makeup Quiz 2.pdf`, `Makeup Quiz 3.pdf` and `Makeup Quiz 5.pdf` in the same local folder and run `python tools/build_scheme_assets.py --makeup`. Publish the resulting makeup images and `site/makeup-scheme-sections.js` along with the updated app, HTML, CSS and student records.
 
 ## Index-only access
 
