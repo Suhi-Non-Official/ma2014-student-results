@@ -9,7 +9,7 @@
   <meta name="description" content="View your MA2014 quiz results and detailed question marks.">
   <title>MA2014 · Student results</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=scheme-2">
+  <link rel="stylesheet" href="styles.css?v=report-1">
   <script src="scheme-sections.js?v=scheme-2" defer></script>
   <script src="app.js?v=scheme-2" defer></script>
 </head>
@@ -37,6 +37,11 @@
             <button id="lookup-submit" type="submit" class="button button-primary"><span>View my results</span><span aria-hidden="true">→</span></button>
           </form>
           <div class="lookup-note"><span class="small-symbol" aria-hidden="true">i</span><p>Your results open on this page. No account or password is needed.</p></div>
+          <section class="report-problem report-problem-login" aria-labelledby="report-login-heading">
+            <h2 id="report-login-heading">Report a marking problem</h2>
+            <p>Have a question about your marks? Describe your concern and upload the relevant answer-script page(s) using the form.</p>
+            <a class="button button-outline report-button" href="https://forms.gle/ir1dytVspSWhPkUA7" target="_blank" rel="noopener noreferrer" aria-label="Report a problem (opens in a new tab)">Report a problem <span aria-hidden="true">↗</span></a>
+          </section>
         </div>
       </div>
     </section>
@@ -47,7 +52,7 @@
       <nav id="quiz-overview" class="quiz-overview" aria-label="Jump to a quiz"></nav>
       <div class="section-heading"><div><span class="eyebrow">THE BREAKDOWN</span><h2>Every question. Every mark.</h2></div><span class="muted">Select a quiz to expand its questions and marking scheme.</span></div>
       <div id="quiz-details" class="quiz-details"></div>
-      <aside class="results-help"><span class="small-symbol" aria-hidden="true">i</span><div><strong>Need to discuss your result?</strong><p>Contact your instructor with your index number and quiz number. Quizzes with no recorded mark are shown as “Absent.” The CA total is the sum of all five quiz marks, out of 100.</p></div></aside>
+      <aside class="results-help report-problem"><span class="small-symbol" aria-hidden="true">i</span><div><h2>Report a marking problem</h2><p>Use the form to describe your concern and upload the relevant answer-script page(s) for your instructor to review.</p><a class="button button-outline report-button" href="https://forms.gle/ir1dytVspSWhPkUA7" target="_blank" rel="noopener noreferrer" aria-label="Report a problem (opens in a new tab)">Report a problem <span aria-hidden="true">↗</span></a></div></aside>
     </section>
   </main>
   <footer class="site-footer"><span>MA2014 <span aria-hidden="true">/</span> Differential Equations</span><span id="last-updated">Student grading portal</span></footer>
