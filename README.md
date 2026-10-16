@@ -1,6 +1,6 @@
 # MA2014 student results
 
-A mobile-friendly student grading portal for Semester 3, Intake 2024. Students enter an index number to see their name, email, quiz totals, question totals and the scheme's assessed subparts. Quiz 1 directs students to their marked answer script. Deduction reasons and submission filenames are excluded.
+A mobile-friendly student grading portal for Semester 3, Intake 2024. Students enter an index number to see their name, email, quiz totals and question totals. Quizzes 2–5 show the actual questions and complete worked marking schemes, split into 32 assessed sections, with the student's mark out of the allocated total beside each section. Select a scheme image to enlarge it. Quiz 1 directs students to their marked answer script. Deduction reasons and submission filenames are excluded.
 
 ## Preview
 
@@ -14,7 +14,7 @@ Run `python -m http.server 8000 --directory site` from this folder and open http
 4. In the repository, open **Settings → Pages → Build and deployment → Source → GitHub Actions**.
 5. Open **Actions → Publish student results → Run workflow** if deployment has not started. The completed run displays the website link.
 
-The workflow publishes only `site/`. It does not publish the Excel files, marking schemes or local reports.
+The workflow publishes only `site/`, including rendered marking-scheme sections. It does not publish the Excel files, original PDF files or local reports.
 
 Official guidance: https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
 
@@ -26,6 +26,10 @@ Official guidance: https://docs.github.com/en/pages/getting-started-with-github-
 4. Preview and check the affected student. Commit and push the updated `site/records/` and `site/metadata.json` files.
 
 Workbook formulas are not evaluated by the import script. Detailed totals are calculated from the supplied numerical component marks. The overall roster's quiz cells must contain numeric marks. Quizzes with no recorded mark are labelled Absent, as requested. They contribute no marks to the CA total, which is the sum of all five quiz marks out of 100. A recorded zero remains a marked result, not an absence.
+
+## Update the marking-scheme images
+
+The current images are built from the PDFs in the local `Marking Schemes/` folder. To regenerate them, install the Python requirements and Poppler (`pdftoppm`), then run `python tools/build_scheme_assets.py`. The script uses the bundled Poppler path when available, otherwise `pdftoppm` on PATH. Crop boundaries are recorded in PDF points in the script and must be reviewed if the source PDF layout changes. Check the result before publishing `site/schemes/` and `site/scheme-sections.js`.
 
 ## Index-only access
 

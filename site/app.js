@@ -38,6 +38,18 @@ function note(message, className) {
   node.append(icon,el('p','',message));
   return node;
 }
+function schemeImages(assets,description) {
+  const group=el('div','scheme-images');
+  assets.forEach((asset,i)=>{
+    const link=el('a','scheme-image-link');link.href=asset.src;link.target='_blank';link.rel='noopener';
+    link.setAttribute('aria-label',`Open full-size ${description}${assets.length>1 ? `, section ${i+1}` : ''}`);
+    const image=el('img','scheme-image');image.src=asset.src;
+    image.width=asset.width;image.height=asset.height;image.loading='lazy';image.decoding='async';
+    image.alt=`${description}${assets.length>1 ? ` (continued section ${i+1})` : ''} from the marking scheme. Open the image to enlarge the working.`;
+    link.append(image);group.append(link);
+  });
+  return group;
+}
 function renderStudent(student) {
   currentStudent = student;
   $('student-name').textContent = student.name || 'Name not available';
@@ -78,7 +90,7 @@ function renderStudent(student) {
       body.append(note(data.total === null ? 'Absent — no mark is recorded for this quiz. Please contact your lecturer if you submitted an answer.' : 'Your total mark is recorded. A detailed question breakdown is not yet available in the supplied register.','unavailable-note'));
     } else {
       let offset = 0;
-      quiz.questions.forEach(question => {
+      quiz.questions.forEach((question,questionIndex) => {
         const section = el('section','question');
         const header = el('div','question-heading');
         const heading = el('h4','',question.title);
@@ -87,8 +99,24 @@ function renderStudent(student) {
         const qTotal = values.reduce((a,b)=>a+b,0);
         header.append(heading,el('span','question-score',`${format(qTotal)} / ${question.max}`));
         section.append(header);
-        const list = el('dl','part-list');
+        const scheme=window.markingSchemeSections?.[i+1]?.[questionIndex];
+        if(scheme){
+          const prompt=el('div','scheme-prompt');
+          prompt.append(el('span','scheme-label','QUESTION'),schemeImages(scheme.prompt,`${quiz.title}, ${question.title}, question`));
+          section.append(prompt,el('p','scheme-enlarge-hint','Select any section to view the working at full size.'));
+        }
+        const list = el('div',scheme ? 'scheme-parts' : 'part-list');
         question.parts.forEach(([label,max],j) => {
+          if(scheme){
+            const block=el('section','scheme-part');
+            const heading=el('div','scheme-part-heading');
+            const title=el('h5','',label);
+            const awarded=el('span','scheme-awarded');
+            awarded.append(el('span','scheme-score-label','YOUR MARK'),el('strong','',`${format(values[j])} / ${max}`));
+            heading.append(title,awarded);
+            block.append(heading,schemeImages(scheme.parts[j],`${quiz.title}, ${question.title}, ${label}`));
+            list.append(block);return;
+          }
           const row = el('div','part');
           const value = el('dd','',format(values[j]));
           value.append(el('span','',` / ${max}`));
