@@ -9,17 +9,17 @@
   <meta name="description" content="View your MA2014 quiz results and detailed question marks.">
   <title>MA2014 · Student results</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=makeup-1">
+  <link rel="stylesheet" href="styles.css?v=buttons-1">
   <script src="scheme-sections.js?v=scheme-2" defer></script>
   <script src="makeup-scheme-sections.js?v=makeup-1" defer></script>
-  <script src="app.js?v=makeup-1" defer></script>
+  <script src="app.js?v=buttons-1" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
     <a href="./" class="brand" aria-label="MA2014 CA Marks Student results home"><span class="brand-icon" aria-hidden="true">∂</span><span>MA2014 <span class="brand-ca">CA Marks</span><span class="brand-subtitle">STUDENT RESULTS</span></span></a>
     <span class="header-context">Semester 3 <span aria-hidden="true">/</span> Intake 2024</span>
-    <button id="switch-student" class="button button-quiet" hidden>Change student <span aria-hidden="true">↗</span></button>
+    <button id="switch-student" class="button button-quiet" hidden>Change student <svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></button>
   </header>
 
   <main id="main">
@@ -35,13 +35,13 @@
             <input id="index-number" name="index" type="text" placeholder="e.g. 240015P" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="16" aria-describedby="index-help lookup-error" required>
             <p id="index-help" class="field-help">Six digits followed by a letter. Uppercase or lowercase is fine.</p>
             <p id="lookup-error" class="error-message" role="alert" hidden></p>
-            <button id="lookup-submit" type="submit" class="button button-primary"><span>View my results</span><span aria-hidden="true">→</span></button>
+            <button id="lookup-submit" type="submit" class="button button-primary"><span>View my results</span><svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16m-7-7 7 7-7 7"/></svg></button>
           </form>
           <div class="lookup-note"><span class="small-symbol" aria-hidden="true">i</span><p>Your results open on this page. No account or password is needed.</p></div>
           <section class="report-problem report-problem-login" aria-labelledby="report-login-heading">
             <h2 id="report-login-heading">Report a marking problem</h2>
             <p>Have a question about your marks? Describe your concern and upload the relevant answer-script page(s) using the form.</p>
-            <a class="button button-outline report-button" href="https://forms.gle/ir1dytVspSWhPkUA7" target="_blank" rel="noopener noreferrer" aria-label="Report a problem (opens in a new tab)">Report a problem <span aria-hidden="true">↗</span></a>
+            <a class="button button-primary report-button" href="https://forms.gle/ir1dytVspSWhPkUA7" target="_blank" rel="noopener noreferrer" aria-label="Report a problem (opens in a new tab)"><span>Report a problem</span><svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a>
           </section>
         </div>
       </div>
@@ -53,7 +53,7 @@
       <nav id="quiz-overview" class="quiz-overview" aria-label="Jump to a quiz"></nav>
       <div class="section-heading"><div><span class="eyebrow">THE BREAKDOWN</span><h2>Every question. Every mark.</h2></div><span class="muted">Select a quiz to expand its questions and marking scheme.</span></div>
       <div id="quiz-details" class="quiz-details"></div>
-      <aside class="results-help report-problem"><span class="small-symbol" aria-hidden="true">i</span><div><h2>Report a marking problem</h2><p>Use the form to describe your concern and upload the relevant answer-script page(s) for your instructor to review.</p><a class="button button-outline report-button" href="https://forms.gle/ir1dytVspSWhPkUA7" target="_blank" rel="noopener noreferrer" aria-label="Report a problem (opens in a new tab)">Report a problem <span aria-hidden="true">↗</span></a></div></aside>
+      <aside class="results-help report-problem"><span class="small-symbol" aria-hidden="true">i</span><div><h2>Report a marking problem</h2><p>Use the form to describe your concern and upload the relevant answer-script page(s) for your instructor to review.</p><a class="button button-primary report-button" href="https://forms.gle/ir1dytVspSWhPkUA7" target="_blank" rel="noopener noreferrer" aria-label="Report a problem (opens in a new tab)"><span>Report a problem</span><svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></a></div></aside>
     </section>
   </main>
   <footer class="site-footer"><span>MA2014 <span aria-hidden="true">/</span> Differential Equations</span><span id="last-updated">Student grading portal</span></footer>

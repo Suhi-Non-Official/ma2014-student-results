@@ -83,7 +83,10 @@ function renderStudent(student) {
     if(isMakeup) anchor.classList.add('makeup-tile');
     anchor.href = `#quiz-${i+1}`;
     const top = el('span','tile-top');
-    const arrow = el('span','','↗'); arrow.setAttribute('aria-hidden','true');
+    const arrow = document.createElementNS('http://www.w3.org/2000/svg','svg');
+    arrow.setAttribute('class','arrow-icon tile-arrow');arrow.setAttribute('viewBox','0 0 24 24');arrow.setAttribute('aria-hidden','true');
+    const arrowPath = document.createElementNS('http://www.w3.org/2000/svg','path');
+    arrowPath.setAttribute('d','M6 18 18 6M6 6h12v12');arrow.append(arrowPath);
     top.append(el('span','',quiz.title),arrow);
     const bar = el('div','mini-bar'); bar.setAttribute('aria-hidden','true');
     const fill = el('span'); fill.style.width = `${data.total === null ? 0 : data.total/20*100}%`;bar.append(fill);
