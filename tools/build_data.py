@@ -112,6 +112,12 @@ def build():
             students[index]['quizzes'][quiz-1] = {'total':total,'parts':parts,'type':'makeup'}
         makeup_counts[quiz] = len(seen)
 
+    # Website-only pending status requested by the instructor; retain workbook marks.
+    for index in ('240157C',):
+        if index not in students:
+            raise ValueError(f'Pending student missing from roster: {index}')
+        students[index]['quizzes'] = [{'total':None,'parts':None,'status':'pending'} for _ in range(5)]
+
     # No plaintext roster, index list, email list or workbook is included in the site.
     # Index-only access is still not authentication: a known/guessed index opens its record.
     output = SITE / 'records'

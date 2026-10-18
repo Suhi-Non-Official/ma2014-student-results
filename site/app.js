@@ -34,10 +34,10 @@ function el(tag, className, text) {
   return node;
 }
 function format(value) { return new Intl.NumberFormat('en', {maximumFractionDigits:2}).format(value); }
-function score(value, max, className) {
+function score(value, max, className, status) {
   const node = el('span', className);
   if (value === null) {
-    node.append(el('span','empty-score','Absent'),el('small','',` / ${max}`));
+    node.append(el('span','empty-score',status === 'pending' ? 'Pending' : 'Absent'),el('small','',` / ${max}`));
   } else {
     node.append(document.createTextNode(format(value)),el('small','',` / ${max}`));
   }
@@ -69,9 +69,10 @@ function renderStudent(student) {
   $('student-email').textContent = student.email || 'Email not available';
   $('student-avatar').textContent = student.name ? student.name.split(/\s+/)[0].slice(0,2) : '∂';
   const marked = student.quizzes.filter(q => q.total !== null);
+  const pending = student.quizzes.filter(q => q.status === 'pending');
   const total = marked.reduce((sum,q) => sum + q.total,0);
-  $('overall-score').replaceChildren(score(total,100));
-  $('recorded-count').textContent = `${marked.length} of 5 quizzes marked · 20 marks per quiz`;
+  $('overall-score').replaceChildren(score(pending.length ? null : total,100,undefined,pending.length ? 'pending' : undefined));
+  $('recorded-count').textContent = pending.length ? `${pending.length} of 5 quiz results pending` : `${marked.length} of 5 quizzes marked · 20 marks per quiz`;
   const overview = $('quiz-overview');
   const details = $('quiz-details');
   overview.replaceChildren(); details.replaceChildren();
@@ -90,7 +91,7 @@ function renderStudent(student) {
     top.append(el('span','',quiz.title),arrow);
     const bar = el('div','mini-bar'); bar.setAttribute('aria-hidden','true');
     const fill = el('span'); fill.style.width = `${data.total === null ? 0 : data.total/20*100}%`;bar.append(fill);
-    const tileScore = score(data.total,20,'tile-score');
+    const tileScore = score(data.total,20,'tile-score',data.status);
     if(data.total === null) tileScore.classList.add('missing');
     anchor.append(top,tileScore,bar);overview.append(anchor);
     if(isMakeup) anchor.append(el('span','makeup-badge','Makeup quiz'));
@@ -111,10 +112,12 @@ function renderStudent(student) {
       title.querySelector('.quiz-open-hint').textContent=card.open?'Select to close marking scheme':'Select to view questions & marking scheme';
     });
     anchor.addEventListener('click',()=>{card.open=true;});
-    summary.append(el('span','quiz-number',String(i+1).padStart(2,'0')),title,score(data.total,20,'quiz-total'),toggle);
+    summary.append(el('span','quiz-number',String(i+1).padStart(2,'0')),title,score(data.total,20,'quiz-total',data.status),toggle);
     const body = el('div','quiz-body');
     if(isMakeup) body.append(note('This result is from the makeup quiz. Your marks and the matching makeup marking scheme are shown below. It counts toward the same quiz in your CA total.','makeup-note'));
-    if(i === 0 && !isMakeup) {
+    if(data.status === 'pending') {
+      body.append(note('Pending — your marks for this quiz are not yet available.','unavailable-note'));
+    } else if(i === 0 && !isMakeup) {
       body.append(note('All marking has been made on your answer script. Please refer to your marked answer script for question-level marks and feedback.','script-note'));
       const topics=['Inverse Laplace transform','Initial value problem using Laplace transforms'];
       (window.markingSchemeSections?.[1] || []).forEach((scheme,q)=>{
@@ -182,6 +185,8 @@ function fromBase64(text) { return Uint8Array.from(atob(text),c=>c.charCodeAt(0)
 function validateRecord(student, index) {
   if (student.index !== index || !Array.isArray(student.quizzes) || student.quizzes.length !== 5) throw new Error('record');
   student.quizzes.forEach((quiz,i) => {
+    if(quiz.status !== undefined && quiz.status !== 'pending') throw new Error('record');
+    if(quiz.status === 'pending' && (quiz.total !== null || quiz.parts !== null)) throw new Error('record');
     if(quiz.type !== undefined && quiz.type !== 'makeup') throw new Error('record');
     if(quiz.type === 'makeup' && !makeupQuizzes[i+1]) throw new Error('record');
     if(quiz.total !== null && (typeof quiz.total !== 'number' || !Number.isFinite(quiz.total) || quiz.total<0 || quiz.total>20)) throw new Error('record');
