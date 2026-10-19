@@ -112,6 +112,10 @@ def build():
             students[index]['quizzes'][quiz-1] = {'total':total,'parts':parts,'type':'makeup'}
         makeup_counts[quiz] = len(seen)
 
+    # Website-only exclusions requested by the instructor; retain workbook records.
+    for index in ('240362B','240567H'):
+        students.pop(index, None)
+
     # Website-only pending status requested by the instructor; retain workbook marks.
     for index in ('240157C',):
         if index not in students:
