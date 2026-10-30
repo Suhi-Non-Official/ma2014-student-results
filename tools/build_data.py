@@ -116,11 +116,9 @@ def build():
     for index in ('240362B','240567H','240567U'):
         students.pop(index, None)
 
-    # Website-only pending status requested by the instructor; retain workbook marks.
-    for index in ('240157C',):
-        if index not in students:
-            raise ValueError(f'Pending student missing from roster: {index}')
-        students[index]['quizzes'] = [{'total':None,'parts':None,'status':'pending'} for _ in range(5)]
+    # Quiz 1 withdrawn by the instructor; retain the recorded Quiz 2-5 results.
+    if '240157C' in students:
+        students['240157C']['quizzes'][0] = {'total': None, 'parts': None}
 
     # No plaintext roster, index list, email list or workbook is included in the site.
     # Index-only access is still not authentication: a known/guessed index opens its record.
